@@ -36,3 +36,21 @@ Vue.prototype.print = (obj,type) => {
   const log = JSON.parse(JSON.stringify(obj));
   console[type](log)
 }
+
+
+// 0:
+// authName: "用户管理"
+// children: Array(1)
+// 0: {id: 110, authName: "用户列表", path: "users", children: Array(0), order: null}
+// length: 1
+// __proto__: Array(0)
+// id: 125
+// order: 1
+// path: "users"
+// __proto__: Object
+// 1: {id: 103, authName: "权限管理", path: "rights", children: Array(2), order: 2}
+// 2: {id: 101, authName: "商品管理", path: "goods", children: Array(3), order: 3}
+// 3: {id: 102, authName: "订单管理", path: "orders", children: Array(1), order: 4}
+// 4: {id: 145, authName: "数据统计", path: "reports", children: Array(1), order: 5}
+// length: 5
+// __proto__: Array(0)

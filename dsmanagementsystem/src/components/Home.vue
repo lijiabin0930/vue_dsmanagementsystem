@@ -21,8 +21,8 @@
               background-color="#545c64"
               text-color="#fff"
               active-text-color="#ffd04b">
-      <!--            一级菜单-->
-            <el-submenu index="1" v-for="item in menulist" :key="item.id">
+      <!--            一级菜单 index 代号是表示每一个一级菜单的区分 这样可以知道打开的是哪一个一级菜单 index是一个随机值才可以 id正好符合-->
+            <el-submenu  v-for="(item) in menulist" :key="item.id" :index="item.id+''">
     <!--              一级菜单模版区-->
               <template slot="title">
     <!--                菜单图标项-->
@@ -31,9 +31,9 @@
                 <span>{{item.authName}}</span>
               </template>
     <!--              二级菜单-->
-              <el-submenu index="1-1">
+              <el-menu-item v-for="(subItem) in item.children" :key="subItem.id" :index="subItem.id+''">
                 <template slot="title">
-                  <i class="el-icon-location"></i><span>导航一</span>
+                  <i class="el-icon-location"></i><span>{{subItem.authName}}</span>
                 </template>
                 <!--                三级菜单-->
 <!--                <el-menu-item index="1-1-1">-->
@@ -42,7 +42,7 @@
 <!--                    <span>导航一</span>-->
 <!--                  </template>-->
 <!--                </el-menu-item>-->
-              </el-submenu>
+              </el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
