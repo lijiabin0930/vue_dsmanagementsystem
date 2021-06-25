@@ -29,8 +29,8 @@ export default {
   methods:{
     //重置表单
     resetForm(formName) {
-      console.log(this)  //父组建获取子组建的方法
-      console.log(formName);
+      // console.log(this)  //父组建获取子组建的方法
+      // console.log(formName);
       this.$refs[formName].resetFields()
       // this.$refs[formName].resetFields();
     },
@@ -39,7 +39,7 @@ export default {
       //写法1
       this.$refs[formName].validate()
           .then(async validate=> {
-            console.log(validate,">>>>>>>>")
+            // console.log(validate,">>>>>>>>")
             // const result =await this.$http.post('login',this.LoginForm);
             //对象解构 起别名 snsyc awit 是用来配合axios异步请求并解构promise对象的
             const {data:result}=await this.$http.post('login',this.LoginForm);
@@ -72,7 +72,7 @@ export default {
               }
             )
           .catch(error=> {
-        console.log(error);
+        // console.log(error);
             return this.$message(
                 {
                   message: '登录成功！',

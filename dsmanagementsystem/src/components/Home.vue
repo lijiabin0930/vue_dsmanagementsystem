@@ -9,7 +9,7 @@
           <span>电商后台管理系统</span>
         </div>
         <div>
-          <el-button type="info" @click="logout">登录</el-button>
+<!--          <el-button type="info" @click="logout">登录</el-button>-->
           <el-button type="info" @click="logout">退出</el-button>
         </div>
       </el-header>
@@ -22,13 +22,13 @@
               text-color="#fff"
               active-text-color="#ffd04b">
       <!--            一级菜单-->
-            <el-submenu index="1">
+            <el-submenu index="1" v-for="item in menulist" :key="item.id">
     <!--              一级菜单模版区-->
               <template slot="title">
     <!--                菜单图标项-->
                 <i class="el-icon-location"></i>
     <!--       菜单文本-->
-                <span>导航一</span>
+                <span>{{item.authName}}</span>
               </template>
     <!--              二级菜单-->
               <el-submenu index="1-1">
@@ -46,10 +46,6 @@
             </el-submenu>
           </el-menu>
         </el-aside>
-
-
-
-
     <!--        主页面-->
         <el-main>Main</el-main>
       </el-container>
@@ -80,12 +76,12 @@ export default {
     //获取菜单列表
     async getMenuList(){
       const {data :res} = await this.$http.get('menus')
-      console.log(res)
+
       if (res.meta.status !== 200){
         return this.$message.error(res.meta.msg)
       }
       this.menulist = res.data
-      console.log(this.menulist)
+      this.print(this.menulist)
       return this.$message(
           {
             message: '获取目录成功!!!',

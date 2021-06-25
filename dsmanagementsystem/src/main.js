@@ -30,3 +30,9 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+//Vue 对console.log的封装 可以打印出来的内容清晰可见 this.print调用 很好用
+Vue.prototype.print = (obj,type) => {
+  type = type || "log";
+  const log = JSON.parse(JSON.stringify(obj));
+  console[type](log)
+}
