@@ -88,7 +88,7 @@ export default {
       console.log(this.menulist)
       return this.$message(
           {
-            message: '获取目录成功',
+            message: '获取目录成功!!!',
             type: 'success',
             showClose:true
           }
