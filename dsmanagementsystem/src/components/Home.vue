@@ -23,18 +23,29 @@
               active-text-color="#ffd04b">
       <!--            一级菜单-->
             <el-submenu index="1">
+    <!--              一级菜单模版区-->
               <template slot="title">
+    <!--                菜单图标项-->
                 <i class="el-icon-location"></i>
+    <!--       菜单文本-->
                 <span>导航一</span>
               </template>
+    <!--              二级菜单-->
               <el-submenu index="1-1">
-                <template slot="title">选项4</template>
-                <el-menu-item index="1-4-1">选项1</el-menu-item>
+                <template slot="title">
+                  <i class="el-icon-location"></i><span>导航一</span>
+                </template>
+                <!--                三级菜单-->
+<!--                <el-menu-item index="1-1-1">-->
+<!--                  <template slot="title">-->
+<!--                    <i class="el-icon-location"></i>-->
+<!--                    <span>导航一</span>-->
+<!--                  </template>-->
+<!--                </el-menu-item>-->
               </el-submenu>
             </el-submenu>
           </el-menu>
         </el-aside>
-
 
 
 
@@ -48,6 +59,16 @@
 <script>
 export default {
   name: "Home",
+  //生命周期函数 组建刚一创建 就执行如下内容
+  created() {
+    //获取菜单列表
+    this.getMenuList()
+  },
+  data(){
+    return {
+     menulist: []
+    }
+  },
   methods:{
     //退出登录
     logout(){
@@ -56,6 +77,23 @@ export default {
       //2）页面跳转至登录页面
       this.$router.push('/login')
     },
+    //获取菜单列表
+    async getMenuList(){
+      const {data :res} = await this.$http.get('menus')
+      console.log(res)
+      if (res.meta.status !== 200){
+        return this.$message.error(res.meta.msg)
+      }
+      this.menulist = res.data
+      console.log(this.menulist)
+      return this.$message(
+          {
+            message: '获取目录成功',
+            type: 'success',
+            showClose:true
+          }
+      )
+    }
   }
 }
 </script>
