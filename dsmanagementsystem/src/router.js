@@ -24,7 +24,15 @@ const router = new Router({
     {
       path:'/home',
       name:'home',
-      component: () =>import('./components/Home')
+      component: () =>import('./components/Home'),
+      redirect:'/home/welcome',
+      children:[
+        {
+          path: '/home/welcome',
+          name: 'welcome',
+          component: () => import('../src/components/Welcome')
+        }
+      ]
     }
   ]
 })

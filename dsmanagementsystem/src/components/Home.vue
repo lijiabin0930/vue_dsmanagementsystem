@@ -2,7 +2,7 @@
     <!--    lay-out布局容器-->
     <el-container class="home_container">
     <!--      头部区域-->
-      <el-header height="50px">
+      <el-header  height="50px">
         <!--        flex 水平布局-->
         <div>
           <img class="img" src="../assets/img/后台.svg" alt="" height="25px" width="50px">
@@ -15,14 +15,16 @@
       </el-header>
       <el-container>
     <!--        侧边栏-->
-        <el-aside width="200px">
-    <!--          侧边栏菜单区-->
+        <el-aside :width="iscollapsed ? '64px' :'200px'" >
+    <!--          侧边栏菜单区 unique-opened是否只保持一个子菜单打开-->
+          <div class="toggl-button" @click="toggleButtonClick">|||</div>
           <el-menu
+              :unique-opened="true"
               background-color="#545c64"
               text-color="#fff"
-              active-text-color="#ffd04b">
+              active-text-color="#ffd04b" :collapse="iscollapsed" :collapse-transition="false" router>
       <!--            一级菜单 index 代号是表示每一个一级菜单的区分 这样可以知道打开的是哪一个一级菜单 index是一个随机值才可以 id正好符合-->
-            <el-submenu  v-for="(item) in menulist" :key="item.id" :index="item.id+''">
+            <el-submenu  v-for="(item) in menulist" :key="item.id" :index="item.id+''" >
     <!--              一级菜单模版区-->
               <template slot="title">
     <!--                菜单图标项-->
@@ -31,7 +33,7 @@
                 <span>{{item.authName}}</span>
               </template>
     <!--              二级菜单-->
-              <el-menu-item v-for="(subItem) in item.children" :key="subItem.id" :index="subItem.id+''">
+              <el-menu-item v-for="(subItem) in item.children" :key="subItem.id" :index="'/home/'+subItem.path">
                 <template slot="title">
                   <i class="el-icon-menu"></i><span>{{subItem.authName}}</span>
                 </template>
@@ -47,7 +49,10 @@
           </el-menu>
         </el-aside>
     <!--        主页面-->
-        <el-main>Main</el-main>
+        <el-main>
+    <!--          放一个路由的占位符-->
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
 </template>
@@ -64,12 +69,14 @@ export default {
     return {
       menulist: [],
       iconsObj:{
-        '125':'iconfont icon-user',
-        "103":"iconfont icon-tijikongjian",
-        "101":"iconfont icon-shangpin",
-        "102":"iconfont icon-danju",
-        "145":"iconfont icon-baobiao",
-      }
+        125:'iconfont icon-user',
+        103:"iconfont icon-tijikongjian",
+        101:"iconfont icon-shangpin",
+        102:"iconfont icon-danju",
+        145:"iconfont icon-baobiao",
+      },
+      // 是否折叠
+      iscollapsed: false
     }
   },
   methods:{
@@ -96,6 +103,9 @@ export default {
             showClose:true
           }
       )
+    },
+    toggleButtonClick(){
+      this.iscollapsed = !this.iscollapsed
     }
   }
 }
@@ -116,7 +126,7 @@ export default {
     //字体居中
     align-items: center;
     color: #f7f7f7;
-    font-size: 20px;
+    font-size: 25px;
     > div{
       display: flex;
       align-items: center;
@@ -127,7 +137,20 @@ export default {
   }
   .el-aside {
     background-color: #535C65;
+    >  .el-menu {
+      border-right: 0px;
+    }
+    > .toggl-button {
+      background-color: #515C66;
+      text-align: center;
+      color: #f7f7f7;
+      font-size: 10px;
+      line-height: 22px;
+      letter-spacing: 0.4em;
+      cursor: pointer;
+    }
   }
+
   .el-main {
     background-color: #F9F9FA;
     padding: 0;
