@@ -3,12 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import "./assets/css/global.css"
+import "./assets/fonts/iconfont.css"
 
+
+import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 
-import 'element-ui/lib/theme-chalk/index.css';
+
 //使用axios
 import axios from "axios";
 Vue.prototype.$http = axios //绑定

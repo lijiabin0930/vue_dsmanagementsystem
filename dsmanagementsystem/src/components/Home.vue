@@ -26,14 +26,14 @@
     <!--              一级菜单模版区-->
               <template slot="title">
     <!--                菜单图标项-->
-                <i class="el-icon-location"></i>
+                <i :class="iconsObj[item.id]"></i>
     <!--       菜单文本-->
                 <span>{{item.authName}}</span>
               </template>
     <!--              二级菜单-->
               <el-menu-item v-for="(subItem) in item.children" :key="subItem.id" :index="subItem.id+''">
                 <template slot="title">
-                  <i class="el-icon-location"></i><span>{{subItem.authName}}</span>
+                  <i class="el-icon-menu"></i><span>{{subItem.authName}}</span>
                 </template>
                 <!--                三级菜单-->
 <!--                <el-menu-item index="1-1-1">-->
@@ -62,7 +62,14 @@ export default {
   },
   data(){
     return {
-     menulist: []
+      menulist: [],
+      iconsObj:{
+        '125':'iconfont icon-user',
+        "103":"iconfont icon-tijikongjian",
+        "101":"iconfont icon-shangpin",
+        "102":"iconfont icon-danju",
+        "145":"iconfont icon-baobiao",
+      }
     }
   },
   methods:{
