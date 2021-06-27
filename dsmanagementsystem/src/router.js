@@ -31,6 +31,11 @@ const router = new Router({
           path: '/home/welcome',
           name: 'welcome',
           component: () => import('../src/components/Welcome')
+        },
+        {
+          path:'/home/users',
+          name: 'users',
+          component: ()=> import('../src/components/user/users')
         }
       ]
     }

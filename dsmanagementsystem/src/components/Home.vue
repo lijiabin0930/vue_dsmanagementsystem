@@ -14,7 +14,7 @@
         </div>
       </el-header>
       <el-container>
-    <!--        侧边栏-->
+    <!--        侧边栏 实现跟着一起大小变换伸缩 通过三木运算 条件? true:false -->
         <el-aside :width="iscollapsed ? '64px' :'200px'" >
     <!--          侧边栏菜单区 unique-opened是否只保持一个子菜单打开-->
           <div class="toggl-button" @click="toggleButtonClick">|||</div>
@@ -22,7 +22,11 @@
               :unique-opened="true"
               background-color="#545c64"
               text-color="#fff"
-              active-text-color="#ffd04b" :collapse="iscollapsed" :collapse-transition="false" router>
+              active-text-color="#ffd04b"
+              :collapse="iscollapsed"
+              :collapse-transition="false"
+              router
+              :default-active="activePath">
       <!--            一级菜单 index 代号是表示每一个一级菜单的区分 这样可以知道打开的是哪一个一级菜单 index是一个随机值才可以 id正好符合-->
             <el-submenu  v-for="(item) in menulist" :key="item.id" :index="item.id+''" >
     <!--              一级菜单模版区-->
@@ -32,8 +36,9 @@
     <!--       菜单文本-->
                 <span>{{item.authName}}</span>
               </template>
-    <!--              二级菜单-->
-              <el-menu-item v-for="(subItem) in item.children" :key="subItem.id" :index="'/home/'+subItem.path">
+    <!--              二级菜单 saveNavState实现点击文字时候 高亮文字 -->
+              <el-menu-item v-for="(subItem) in item.children" :key="subItem.id" :index="'/home/'+subItem.path"
+                            @click="saveNavState('/home/'+subItem.path)">
                 <template slot="title">
                   <i class="el-icon-menu"></i><span>{{subItem.authName}}</span>
                 </template>
@@ -64,6 +69,12 @@ export default {
   created() {
     //获取菜单列表
     this.getMenuList()
+
+    //这里实现的是点击侧边导航栏的二级菜单的时候 可以高亮文字 实现逻辑如下：
+    //1）在home组建里 通过查询参数可以default-active绑定一个导航栏的index 来表示激活哪一个菜单了
+    //2）然后在home组建点击这个菜单栏目的时候 在sessionStorage里存起来当前的index
+    //3）点击后 组建重新渲染 会去读取在sessionStorage里存起来当前的index 绑定给default-active
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   data(){
     return {
@@ -76,7 +87,8 @@ export default {
         145:"iconfont icon-baobiao",
       },
       // 是否折叠
-      iscollapsed: false
+      iscollapsed: false,
+      activePath: '' //被激活的地址
     }
   },
   methods:{
@@ -104,8 +116,14 @@ export default {
           }
       )
     },
+    //折叠窗口时候需要改变iscollapsed来实现
     toggleButtonClick(){
       this.iscollapsed = !this.iscollapsed
+    },
+    //实现刷新后 还能快速定位到刚刚点击的位置
+    saveNavState(activePath){
+      window.sessionStorage.setItem('activePath',activePath)
+      this.activePath = activePath
     }
   }
 }
