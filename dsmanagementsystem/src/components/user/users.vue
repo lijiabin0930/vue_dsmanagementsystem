@@ -52,8 +52,7 @@
             label="状态">
       <!--          作用域插槽-->
           <template slot-scope="scope">
-            <el-switch
-                v-model="scope.row.mg_state" disabled>
+            <el-switch v-model="scope.row.mg_state" @change="valueChange(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
@@ -76,6 +75,7 @@
           </template>
         </el-table-column>
       </el-table>
+
       <!--      分页区域-->
       <el-pagination
           @size-change="handleSizeChange"
@@ -133,6 +133,14 @@
          console.log(`当前页: ${val}`);
          this.queryinfo.pagenum = val
          this.getUserList()
+       },
+       //角色状态开关改变后 拿到结果
+       async valueChange(userinfo){
+         const id = userinfo.id
+         const state = userinfo.mg_state  //知识点 动态换入参数需要 使用`${}来实现引用`
+         const {data :res }= await this.$http.put(`users/${id}/state/${state}`)
+         this.print(res)
+         //如果更改成功
        }
     }
 }

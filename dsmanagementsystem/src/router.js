@@ -41,6 +41,8 @@ const router = new Router({
     }
   ]
 })
+
+
 //挂载路由导航守卫
 //to 要去的路径 from 从哪里来 next()跳转页面 可以下一步 可以指定路由
 router.beforeEach((to,from,next)=>{
