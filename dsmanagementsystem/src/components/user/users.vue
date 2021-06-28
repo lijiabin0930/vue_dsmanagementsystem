@@ -63,7 +63,7 @@
           <template slot-scope="scope">
             <el-tooltip  :enterable="false" content="修改用户" effect="dark" placement="top-start">
               <!--            修改按钮-->
-              <el-button icon="el-icon-edit" size="mini" type="primary"></el-button>
+              <el-button icon="el-icon-edit" size="mini" type="primary"  @click="showEditDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip  :enterable="false" content="删除用户" effect="dark" placement="top-start">
             <!--            删除按钮-->
@@ -88,9 +88,6 @@
           @current-change="handleCurrentChange">
       </el-pagination>
     </el-card>
-
-
-<!--    //额外的对话框 点击后弹出的-->
     <el-dialog
         :visible.sync="addDialogVisible"
         title="添加用户"
@@ -112,7 +109,6 @@
         <el-form-item label="手机" prop="mobile">
           <el-input v-model="addForm.mobile"  placeholder="请输入手机号" ></el-input>
         </el-form-item>
-
       </el-form>
     <!--      底部区域-->
       <span slot="footer" class="dialog-footer">
@@ -120,6 +116,20 @@
     <el-button type="primary" @click="adduser('addFormRef')">确 定</el-button>
   </span>
     </el-dialog>
+
+  <!--    编辑用户信息的对话框-->
+    <el-dialog
+        title="编辑用户"
+        :visible.sync="editeDialogVisible"
+        width="50%">
+    <!--      这里放内容  -->
+
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -161,6 +171,7 @@
         userlist : [],
         total: 0 ,
         addDialogVisible: false, //控制对话框的显示与隐藏,
+        editeDialogVisible: false ,//控制对话框的显示与隐藏,
         //添加用户的内容
         addForm:{
           username: "",
@@ -186,7 +197,11 @@
             { required: true, message: '请输入手机号', trigger: 'blur' },
             { validator: checkMobile, trigger: 'blur' }
           ]
-
+        },
+        editUser:{
+          id: '',
+          email: '',
+          mobile: ''
         }
       }
     },
@@ -259,6 +274,18 @@
           }
           return this.$message.error('注册失败：失败原因-' + res.meta.msg)
         })
+       },
+        // 完成修改用户信息对话框的逻辑
+       showEditDialog(userinfo){
+        const id = userinfo.id
+        const username = userinfo.username
+        const email = userinfo.email
+        const mobile = userinfo.mobile
+        this.editUser.id = id
+        this.editUser.email = email
+        this.editUser.mobile = mobile
+
+
 
        }
     }
