@@ -51,6 +51,7 @@
         <el-table-column
             label="状态">
       <!--          作用域插槽-->
+          <!--          slot-scope="scope" 可以接收从子组建传出来的结果 通过scope.row.xx可以拿到数据结果 row是当时子组建内部:row绑定的-->
           <template slot-scope="scope">
             <el-switch v-model="scope.row.mg_state" @change="valueChange(scope.row)">
             </el-switch>
@@ -88,19 +89,20 @@
       </el-pagination>
     </el-card>
 
-    //额外的对话框 点击后弹出的
+
+<!--    //额外的对话框 点击后弹出的-->
     <el-dialog
         :visible.sync="addDialogVisible"
         title="添加用户"
-        width="50%">
+        width="50%" @close="resetForm('addFormRef')">
     <!--      内容主体区-->
       <el-form ref="addFormRef"  :model="addForm" :rules="addFormRules" label-width="70px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"  placeholder="请输入用户名" ></el-input>
         </el-form-item>
 
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="addForm.password"  placeholder="请输入密码" ></el-input>
+        <el-form-item   label="密码" prop="password">
+          <el-input v-model="addForm.password" type="password" placeholder="请输入密码" show-password ></el-input>
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email">
@@ -115,7 +117,7 @@
     <!--      底部区域-->
       <span slot="footer" class="dialog-footer">
     <el-button @click="addDialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="adduser('addFormRef')">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -131,9 +133,31 @@
     data(){
       // data: {total: 4, pagenum: 1, users: Array(2)}
       // meta: {msg: "获取管理员列表成功", status: 200}
+
+      //自定义校验规则的编写方法
+      //验证邮箱的
+      var checkEmail = (rule , value ,callback) =>{
+        const regmail = /^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*\.[a-z]{2,}$/
+        if (regmail.test(value)){
+          //合规就调用callback 进行下一步
+          return callback()
+        }
+        //不合规
+        return  callback(new Error("请输入合法的邮箱！"))
+      }
+      //验证手机号
+      var checkMobile = (rule , value ,callback) =>{
+          // console.log(value)
+          const regMobile = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
+          if (regMobile.test(value)){
+            return callback()
+          }
+          return callback(new Error("请输入正确的手机号！！"))
+      }
+
       return {
         //获取用户列表的参数对象 pagenum当前的页数 pagesize当前每页显示多少条数据
-        queryinfo: {query: '', pagenum: 1, pagesize: 2} ,
+        queryinfo: {query: '', pagenum: 1, pagesize: 5} ,
         userlist : [],
         total: 0 ,
         addDialogVisible: false, //控制对话框的显示与隐藏,
@@ -156,9 +180,11 @@
           ],
           email: [
             { required: true, message: '请输入邮箱', trigger: 'blur' },
+            { validator: checkEmail, trigger: 'blur' }
           ],
           mobile: [
             { required: true, message: '请输入手机号', trigger: 'blur' },
+            { validator: checkMobile, trigger: 'blur' }
           ]
 
         }
@@ -208,6 +234,33 @@
        changeAddDialogVisible(){
         this.addDialogVisible = true
        },
+       //重置表单
+       resetForm(formName) {
+        //添加用户对话框关闭 表单自动清空
+         this.$refs[formName].resetFields();
+       },
+       //填写完成后 做最后的统一验证 async在这个要执行的promise返回的函数前找一个函数标上就行了 或者单独在methods里定义async
+       adduser(Ref){
+        this.$refs[Ref].validate(async isvalidatable=>{
+          // console.log(isvalidatable); //ture
+          if  (!isvalidatable){
+            return this.$message.error('表单校验失败！请查证后再次注册')
+          }
+          //这边确认没有问题后就可以发起真正的http请求了
+          const {data :res} = await this.$http({
+            url:'users',method:'POST',data: this.addForm
+          })
+          if (res.meta.status == 201){
+            this.$message.success(`注册用户:${this.addForm.username}成功`)
+            this.addDialogVisible = false //关闭对话框
+            //刷新表达
+            this.getUserList()
+            return
+          }
+          return this.$message.error('注册失败：失败原因-' + res.meta.msg)
+        })
+
+       }
     }
 }
 </script>
