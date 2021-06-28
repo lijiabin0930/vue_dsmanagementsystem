@@ -11,12 +11,13 @@ import "./assets/fonts/iconfont.css"
 
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';
+//使用axios
+import axios from "axios";
+
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 
-//使用axios
-import axios from "axios";
 Vue.prototype.$http = axios //绑定
 //配置请求的根路径
 axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"
