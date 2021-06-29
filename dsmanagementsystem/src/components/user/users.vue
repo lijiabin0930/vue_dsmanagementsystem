@@ -70,7 +70,7 @@
             </el-tooltip>
             <el-tooltip :enterable="false" content="删除用户" effect="dark" placement="top-start">
               <!--            删除按钮-->
-              <el-button icon="el-icon-delete" size="mini" type="danger"></el-button>
+              <el-button icon="el-icon-delete" size="mini" type="danger" @click="deleteUserByID(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip :enterable="false" content="分配角色" effect="dark" placement="top-start">
               <!--            分配角色按钮-->
@@ -298,7 +298,7 @@ export default {
           this.$message.success(`注册用户:${this.addForm.username}成功`)
           this.addDialogVisible = false //关闭对话框
           //刷新表达
-          this.getUserList()
+          await this.getUserList()
           return
         }
         return this.$message.error('注册失败：失败原因-' + res.meta.msg)
@@ -310,12 +310,11 @@ export default {
       const id = userinfo.id
       //调用接口 获取id对应信息
       const {data: res} = await this.$http.get(`users/${id}`)
-      console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('查询用户信息失败!')
       }
       this.editForm = res.data
-      console.log(this.editForm)
+      //显示对话框
       this.editeDialogVisible = true
     },
     //修改用户信息 并提交
@@ -340,8 +339,36 @@ export default {
         //关闭窗口
         this.editeDialogVisible = false
         //更新列表
-        this.getUserList()
+        await this.getUserList()
       })
+    },
+    // 删除用户
+     deleteUserByID(userInfo){
+      const  id  = userInfo.id
+       //删除需要弹窗确认
+      this.$confirm('此操作将永久删除用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        //这里写删除用户的逻辑
+        const {data :res} = await this.$http.delete(`users/${id}`,{id:id})
+        if(res.meta.status !== 200){
+          this.$message.error(`删除用户失败：失败原因${res.meta.msg}`)
+          return
+        }
+        await this.getUserList()
+        console.log(res)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   }
 }
