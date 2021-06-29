@@ -33,6 +33,16 @@ const router = new Router({
           path:'/home/users',
           name: 'users',
           component: ()=> import('../src/components/user/users')
+        },
+        {
+          path:'/home/rights',
+          name: 'rights',
+          component: ()=>import('../src/components/power/Rights')
+        },
+        {
+          path:'/home/roles',
+          name:'roles',
+          component: ()=>import('../src/components/power/Roles')
         }
       ]
     }

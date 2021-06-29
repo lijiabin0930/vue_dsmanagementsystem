@@ -13,6 +13,7 @@
         <el-button type="info" @click="logout">退出</el-button>
       </div>
     </el-header>
+
     <el-container>
       <!--        侧边栏 实现跟着一起大小变换伸缩 通过三木运算 条件? true:false -->
       <el-aside :width="iscollapsed ? '64px' :'200px'">
