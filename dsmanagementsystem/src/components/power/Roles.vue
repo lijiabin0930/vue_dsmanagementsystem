@@ -138,11 +138,6 @@ export default {
         });
       }
       this.roleList = res.data
-      return this.$message({
-        showClose: true,
-        message: '获取用户列表成功！',
-        type: 'success'
-      });
     },
     removeRightById(roledata,rightId){
       //弹出是否要删除
@@ -153,7 +148,6 @@ export default {
         }).then(async () => {
           //这里发情删除请求删除某个用户下的某个权限
           const {data: res} = await this.$http.delete(`roles/${roledata.id}/rights/${rightId}`)
-          console.log(res)
           if (res.meta.status !== 200){
             return this.$message.error('删除用户权限失败')
           }
@@ -195,12 +189,22 @@ export default {
     setDefKeysNull(){
       this.defKeys = []
     },
-    setChown(){
+    async setChown(){
       //三级tree 分别是 104 商品管理 -> 商品列表 -> 添加商品
       let value = this.$refs["treeData"].getCheckedKeys() // 添加商品id
       let value1 = this.$refs["treeData"].getHalfCheckedKeys() // 商品管理 -> 商品列表 id
       this.keysIdList = [...value , ...value1] //列表解构
+      let keysIdStr = this.keysIdList.join(',')
       //点击确定 开始请求后端角色授权的接口
+      const {data :res} = await this.$http.post(`roles/${this.roleId}/rights`,{rids:keysIdStr})
+      if (res.meta.status !== 200){
+        return this.$message.error('用户授权失败！')
+      }
+      //关闭窗口
+      this.setRightDialogVisible = false
+      //刷新列表
+      await  this.getRoleList()
+      return  this.$message.success('用户授权成功！')
     }
     }
 }

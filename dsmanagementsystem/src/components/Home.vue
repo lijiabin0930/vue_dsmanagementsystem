@@ -107,14 +107,6 @@ export default {
         return this.$message.error(res.meta.msg)
       }
       this.menulist = res.data
-      this.print(this.menulist)
-      return this.$message(
-          {
-            message: '获取目录成功!!!',
-            type: 'success',
-            showClose: true
-          }
-      )
     },
     //折叠窗口时候需要改变iscollapsed来实现
     toggleButtonClick() {
