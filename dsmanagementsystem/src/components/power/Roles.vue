@@ -26,7 +26,7 @@
     <!--              一级权限里 占了5个格子-->
               <el-col :span="5" >
               <!--               渲染一级权限   -->
-                <el-tag :key="item1.id" closable @close="removeRightById(scope.row,item1.id)">
+                <el-tag  closable @close="removeRightById(scope.row,item1.id)">
                   {{item1.authName}}
                 </el-tag>
                 <i class="el-icon-caret-right"></i>
@@ -65,12 +65,33 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-setting">分配权限</el-button>
+            <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog(scope.row)">分配权限</el-button>
           </template>
         </el-table-column>
-
       </el-table>
     </el-card>
+
+  <!--    分配权限 需要单独建立一个dialog setRightDialogVisible控制对话框的显示与隐藏-->
+    <el-dialog
+        title="提示"
+        :visible.sync="setRightDialogVisible"
+        width="50%" @close="setDefKeysNull">
+    <!--       树形解构 展示目前已经有的权限-->
+      <el-tree
+          :data="rightTreeList"
+          :props="treeProps"
+          show-checkbox
+          node-key="id"
+          default-expand-all
+          :default-checked-keys="defKeys"
+          ref="treeData">
+      </el-tree>
+
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="setRightDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="setChown">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -87,7 +108,22 @@ export default {
       roleList: [],
       bdbottom: "bdbottom",
       bdtop: "bdtop",
-      vcenter: "vcenter"
+      vcenter: "vcenter",
+      setRightDialogVisible: false,
+      //用于显示按照要求格式的Tree形解构{id:xxx,children:[id:xx,children:[]],id:xxx}
+      rightTreeList:[],
+      //树形控件属性绑定
+      treeProps: {
+        //这两个属性是固定的 children代表树状解构的遍历的key label表示需要显示的内容 对应的是数据的key
+        children: 'children',
+        label: 'authName',
+      },
+      //已经被存在的权限的id的列表 就是用来给tree勾选对勾用的 目前你有哪个权限 就把你的三级权限的id 放进去
+      defKeys: [],
+      //这里放的是 用户勾选的内容的ID id是tree里边绑定的node-key 的值 拿到所有的就可以调用函数来给后端加入新的了
+      keysIdList: [],
+      roleId: '' //获取用户ID 方便其他方法使用 公共变量
+
     }
   },
   methods: {
@@ -134,7 +170,38 @@ export default {
             message: '已取消删除'
           });
         });
+      },
+    async showSetRightDialog(roledata){
+      //展示前获取所有权限列表数据 并负值
+      const {data :res} = await this.$http.get("rights/tree")
+      if (res.meta.status !== 200){
+        this.$message.error("获取权限列表失败！！！")
       }
+      this.rightTreeList = res.data
+      // this.defKeys = []
+      this.getThirdChownID(roledata,this.defKeys)
+      this.roleId = roledata.id
+      this.setRightDialogVisible = true
+    },
+    //通过递归获取角色所有三级权限的id
+    getThirdChownID(node,arr){
+      if (!node.children){
+        return arr.push(node.id)
+      }
+      node.children.forEach(item =>{
+        this.getThirdChownID(item,arr)
+      })
+    },
+    setDefKeysNull(){
+      this.defKeys = []
+    },
+    setChown(){
+      //三级tree 分别是 104 商品管理 -> 商品列表 -> 添加商品
+      let value = this.$refs["treeData"].getCheckedKeys() // 添加商品id
+      let value1 = this.$refs["treeData"].getHalfCheckedKeys() // 商品管理 -> 商品列表 id
+      this.keysIdList = [...value , ...value1] //列表解构
+      //点击确定 开始请求后端角色授权的接口
+    }
     }
 }
 </script>
