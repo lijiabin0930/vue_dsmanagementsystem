@@ -72,9 +72,11 @@
               <!--            删除按钮-->
               <el-button icon="el-icon-delete" size="mini" type="danger" @click="deleteUserByID(scope.row)"></el-button>
             </el-tooltip>
+            <!--            放上去提示-->
             <el-tooltip :enterable="false" content="分配角色" effect="dark" placement="top-start">
               <!--            分配角色按钮-->
-              <el-button icon="el-icon-setting" size="mini" type="warning"></el-button>
+              <el-button icon="el-icon-setting" size="mini" type="warning"
+                         @click="setUserRoleDialog(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -121,11 +123,11 @@
   </span>
     </el-dialog>
 
-    <!--    编辑用户信息的对话框-->
+    <!--    编辑用户信息的对话框 setNull 需要把共有使用的值重置 防止出错-->
     <el-dialog
         :visible.sync="editeDialogVisible"
         title="编辑用户"
-        width="50%" @click="resetEditForm('editUserRef')">
+        width="50%" @click="resetEditForm('editUserRef')" @close="setNull">
       <!--      这里放内容  -->
       <el-form ref="editUserRef" :model="editForm" :rules="editUserRules" label-width="70px">
         <el-form-item label="用户名">
@@ -141,6 +143,31 @@
       <span slot="footer" class="dialog-footer">
     <el-button @click="editeDialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="updateUser('editUserRef')">确 定</el-button>
+  </span>
+    </el-dialog>
+
+      <!--    设置用户权限的对话框-->
+    <el-dialog
+        title="设置用户权限"
+        :visible.sync="UserRoleDialogVisible"
+        width="50%">
+     <div>
+       <p>当前用户名:    {{this.userinfo.username}}</p>
+       <p>当前用户角色:   {{this.userinfo.role_name}}</p>
+       <p>设置用户角色：
+         <el-select v-model="roleID" placeholder="请选择">
+           <el-option
+               v-for="item in roleList"
+               :key="item.id"
+               :label="item.roleName"
+               :value="item.id">
+           </el-option>
+         </el-select>
+       </p>
+     </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="UserRoleDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="setUserRole">确 定</el-button>
   </span>
     </el-dialog>
 
@@ -225,8 +252,14 @@ export default {
           {required: true, message: '请输入手机号', trigger: 'blur'},
           {validator: checkMobile, trigger: 'blur'}
         ]
-
-      }
+      },
+      UserRoleDialogVisible: false,
+      //用于设置用户角色的时候 打开分配角色的时候 通过点击按钮时候 scope.row传入数据
+      userinfo: {},
+      //用户获取所有的用户角色
+      roleList: [],
+      //下拉菜单选中的结果
+      roleID:''
     }
   },
   methods: {
@@ -294,7 +327,7 @@ export default {
         const {data: res} = await this.$http({
           url: 'users', method: 'POST', data: this.addForm
         })
-        if (res.meta.status == 201) {
+        if (res.meta.status === 201) {
           this.$message.success(`注册用户:${this.addForm.username}成功`)
           this.addDialogVisible = false //关闭对话框
           //刷新表达
@@ -369,6 +402,34 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+    async setUserRoleDialog(userdata){
+      this.userinfo = userdata
+      //获取后端接口 拿到所有用户的角色信息
+      const {data :res} = await this.$http.get('roles')
+      if (res.meta.status !== 200){
+        return this.$message.error('用户用户角色列表失败')
+      }
+      this.roleList = res.data
+      this.UserRoleDialogVisible = true
+    },
+    //点击按钮分配角色
+    async setUserRole(){
+      if (!this.roleID){
+        return this.$message.error('请选择要分配的角色！！')
+      }
+      const userId = this.userinfo.id
+      const userRoleSelected = this.roleID
+      const {data :res} = await this.$http.put(`users/${userId}/role`,{rid:`${userRoleSelected}`})
+      if (res.meta.status !== 200){
+        return this.$message.error('编辑角色失败！！')
+      }
+      await this.getUserList()
+      this.UserRoleDialogVisible = false
+    },
+    setNull(){
+      this.roleID = ""
+      this.userinfo = {}
     }
   }
 }

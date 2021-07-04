@@ -28,6 +28,10 @@
             label="路径">
         </el-table-column>
         <el-table-column
+            prop="id"
+            label="id">
+        </el-table-column>
+        <el-table-column
             prop="level"
             label="等级"
             width="180" align="center">
@@ -64,6 +68,7 @@ export default {
         return this.$message.error('获取权限列表失败！！！')
       }
       this.rightList = res.data
+      console.log(res.data)
     }
   }
 
