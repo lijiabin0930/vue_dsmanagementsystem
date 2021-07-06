@@ -75,8 +75,8 @@ export default {
             // console.log(error);
             return this.$message(
                 {
-                  message: '登录成功！',
-                  type: 'success',
+                  message: '登录失败！',
+                  type: 'error',
                   showClose: true
                 }
             )

@@ -43,6 +43,10 @@ const router = new Router({
           path:'/home/roles',
           name:'roles',
           component: ()=>import('../src/components/power/Roles')
+        },{
+          path: '/home/categories',
+          name:'roles',
+          component: ()=>import('../src/components/goods/cates')
         }
       ]
     }
