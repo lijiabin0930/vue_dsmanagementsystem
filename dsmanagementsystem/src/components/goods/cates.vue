@@ -13,22 +13,25 @@
       </div>
       <el-table
           highlight-current-row
-          :data="tableData"
+          :data="goodsList"
           style="width: 100%">
         <el-table-column
             type="index"
             width="50">
         </el-table-column>
         <el-table-column
-            prop="date"
+            prop="cat_name"
             label="分类名称">
         </el-table-column>
         <el-table-column
-            prop="name"
-            label="是否有效">
+            prop="cat_deleted"
+            label="是否有效" align="center">
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-check"  v-if="scope.row.cat_deleted === false" size="mini"  circle></el-button>
+          </template>
         </el-table-column>
         <el-table-column
-            prop="address"
+            prop="cat_level"
             label="排序">
         </el-table-column>
         <el-table-column
@@ -36,6 +39,15 @@
             label="操作">
         </el-table-column>
       </el-table>
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[100, 200, 300, 400]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -49,6 +61,9 @@ export default {
   },
   data(){
     return {
+      goodsList: [],
+      //获取用户列表的参数对象 pagenum当前的页数 pagesize当前每页显示多少条数据
+      queryinfo: {query: '', pagenum: 1, pagesize: 5},
 
     }
   },
@@ -59,7 +74,9 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error('获取商品列表失败')
       }
-      console.log(res)
+      this.goodsList = res.data
+      console.log(res.data)
+      this.$message.success('获取商品列表成功！')
     }
 
   }
