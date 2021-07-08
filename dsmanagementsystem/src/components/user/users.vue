@@ -210,6 +210,7 @@ export default {
       //获取用户列表的参数对象 pagenum当前的页数 pagesize当前每页显示多少条数据
       queryinfo: {query: '', pagenum: 1, pagesize: 5},
       userlist: [],
+      //总数据条数
       total: 0,
       addDialogVisible: false, //控制对话框的显示与隐藏,
       editeDialogVisible: false,//控制对话框的显示与隐藏,
@@ -265,7 +266,6 @@ export default {
   methods: {
     async getUserList() {
       const {data: res} = await this.$http.get('users', {params: this.queryinfo})
-      this.print(res)
       if (res.meta.status !== 200) {
         return this.$message.error("获取用户列表失败！！")
       }
@@ -278,8 +278,7 @@ export default {
     },
     //监听 pagesize改变事件
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-      this.queryinfo.pagesize = val
+      this.queryinfo.pagesize = val·
       //重新获取数据
       this.getUserList()
     },

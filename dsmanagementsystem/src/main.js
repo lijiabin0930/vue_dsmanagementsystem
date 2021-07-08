@@ -17,6 +17,9 @@ import axios from "axios";
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 
+//安装第三方插件 显示树形表格
+import TreeTable from 'vue-table-with-tree-grid'
+Vue.component('tree-table',TreeTable)
 
 Vue.prototype.$http = axios //绑定
 //配置请求的根路径
