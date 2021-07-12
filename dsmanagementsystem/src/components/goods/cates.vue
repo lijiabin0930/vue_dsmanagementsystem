@@ -68,7 +68,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="addStoreDialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addStoreDialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="addCate">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -103,8 +103,7 @@ export default {
         cat_name: [{required: true, message: '请输入分类名称', trigger: 'blur'}],
       },
       catLists: [],
-      selectKeys: [] //选中的数组放数据的地方 必须是数组
-
+      selectKeys: [] ,//选中的数组放数据的地方 必须是数组
     }
   },
   methods: {
@@ -144,6 +143,18 @@ export default {
     //选择项发生变化就触发
     parentsHandleChange(){
       console.log(this.selectKeys)
+      //长度大于0 选中了父级分类
+      if (this.selectKeys.length > 0){
+        this.ruleForm.cat_pid = this.selectKeys[this.selectKeys.length-1]
+        this.ruleForm.cat_level = this.selectKeys.length
+        return
+      }else {
+        this.ruleForm.cat_pid = 0
+        this.ruleForm.cat_level = 0
+      }
+    },
+    addCate(){
+      console.log(this.ruleForm)
     }
   }
 }
