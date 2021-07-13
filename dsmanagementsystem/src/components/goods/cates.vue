@@ -67,7 +67,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="addStoreDialogVisible = false">取 消</el-button>
+    <el-button @click="closeCate">取 消</el-button>
     <el-button type="primary" @click="addCate">确 定</el-button>
   </span>
     </el-dialog>
@@ -155,6 +155,18 @@ export default {
     },
     addCate(){
       console.log(this.ruleForm)
+
+    },
+    //关闭对话框时候 要清空ruleFrom下次进来是空的
+    closeCate(){
+      //清空表单
+      this.$refs.ruleForm.resetFields()
+      this.selectKeys = []
+      this.ruleForm = {
+        cat_name: '',
+        cat_pid: 0, cat_level: 0
+      }
+      this.addStoreDialogVisible = false
     }
   }
 }
