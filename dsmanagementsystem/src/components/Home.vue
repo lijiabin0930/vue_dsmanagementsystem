@@ -107,6 +107,7 @@ export default {
         return this.$message.error(res.meta.msg)
       }
       this.menulist = res.data
+      console.log(this.menulist,">>>>>>>>>>>>>.")
     },
     //折叠窗口时候需要改变iscollapsed来实现
     toggleButtonClick() {

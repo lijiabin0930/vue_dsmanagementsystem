@@ -293,7 +293,6 @@ export default {
       const id = userinfo.id
       const state = userinfo.mg_state  //知识点 动态换入参数需要 使用`${}来实现引用`
       const {data: res} = await this.$http.put(`users/${id}/state/${state}`)
-      this.print(res)
       //如果更改成功
       if (res.meta.status !== 200) {
         userinfo.mg_state = !userinfo.mg_state

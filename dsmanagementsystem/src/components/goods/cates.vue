@@ -153,9 +153,18 @@ export default {
         this.ruleForm.cat_level = 0
       }
     },
-    addCate(){
+    async addCate(){
       console.log(this.ruleForm)
-
+      const {data :res} =await this.$http.post(
+        'categories', this.ruleForm)
+      //添加成功后 要刷新加载列表进来
+      if (res.meta.status !== 201){
+        this.$message.error("添加分类失败！！")
+        return
+      }
+      //成功就要关闭窗口 并刷新列表
+      await this.getCategories()
+      this.addStoreDialogVisible = false
     },
     //关闭对话框时候 要清空ruleFrom下次进来是空的
     closeCate(){
