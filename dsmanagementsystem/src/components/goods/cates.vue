@@ -68,7 +68,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="closeCate">取 消</el-button>
-    <el-button type="primary" @click="addCate">确 定</el-button>
+    <el-button type="primary" @click="addCate('ruleForm')">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -153,19 +153,6 @@ export default {
         this.ruleForm.cat_level = 0
       }
     },
-    async addCate(){
-      console.log(this.ruleForm)
-      const {data :res} =await this.$http.post(
-        'categories', this.ruleForm)
-      //添加成功后 要刷新加载列表进来
-      if (res.meta.status !== 201){
-        this.$message.error("添加分类失败！！")
-        return
-      }
-      //成功就要关闭窗口 并刷新列表
-      await this.getCategories()
-      this.addStoreDialogVisible = false
-    },
     //关闭对话框时候 要清空ruleFrom下次进来是空的
     closeCate(){
       //清空表单
@@ -176,6 +163,32 @@ export default {
         cat_pid: 0, cat_level: 0
       }
       this.addStoreDialogVisible = false
+    },
+    //确定添加分类
+    addCate(refName){
+      this.$refs[refName].validate().then(async validate => {
+        if (validate) {
+        const {data :res}  = await this.$http.post(
+            'categories',this.ruleForm
+
+          )
+          if (res.meta.status !== 201){
+            return this.$message.error('添加商品分类失败!')
+
+          }
+        return  this.$message.success("添加商品分类成功！")
+        }
+          }
+      ).catch(error => {
+            console.log(error);
+            return this.$message(
+                {
+                  message: '添加分类失败，验证分类名称失败了！',
+                  type: 'error',
+                  showClose: true
+                }
+            )
+          })
     }
   }
 }

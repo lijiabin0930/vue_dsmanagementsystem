@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a5dc07b9-a3cc-44d5-9a4f-d7ce268f97b2" name="默认变更列表" comment="编辑分类">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsmanagementsystem/src/components/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/dsmanagementsystem/src/components/Home.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dsmanagementsystem/src/components/goods/cates.vue" beforeDir="false" afterPath="$PROJECT_DIR$/dsmanagementsystem/src/components/goods/cates.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsmanagementsystem/src/components/user/users.vue" beforeDir="false" afterPath="$PROJECT_DIR$/dsmanagementsystem/src/components/user/users.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +106,7 @@
       <workItem from="1624584021297" duration="18846000" />
       <workItem from="1624698665362" duration="52678000" />
       <workItem from="1625046532699" duration="34253000" />
-      <workItem from="1625380733935" duration="29689000" />
+      <workItem from="1625380733935" duration="33271000" />
     </task>
     <task id="LOCAL-00001" summary="主页面的的侧边栏菜单">
       <created>1624606802220</created>
