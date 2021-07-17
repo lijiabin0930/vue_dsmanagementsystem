@@ -200,6 +200,7 @@ export default {
 
               }
               this.closeCate()
+              this.getCategories()
               return this.$message.success("添加商品分类成功！")
             }
           }
@@ -242,15 +243,30 @@ export default {
     //删除分类
     async deleteEditorCat(data) {
       this.idEditCat = data.cat_id
-      const {data: res} = await this.$http.delete(`categories/${this.idEditCat}`)
-      if (res.meta.status !== 200) {
+      //删除需要弹窗确认
+      this.$confirm('此操作将永久删除分类, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        //这里写删除用户的逻辑
+        const {data :res} = await this.$http.delete(`categories/${this.idEditCat}`)
+        if(res.meta.status !== 200){
+          this.$message.error(`删除用户失败：失败原因${res.meta.msg}`)
+          return
+        }
         this.idEditCat = ''
-        return this.$message.error('删除失败！！！')
-      }
-      this.idEditCat = ''
-      await this.getCategories()
-      return this.$message.success('删除成功！')
-
+        await this.getCategories()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   }
 }

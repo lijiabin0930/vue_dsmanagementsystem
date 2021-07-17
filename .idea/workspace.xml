@@ -109,7 +109,8 @@
       <workItem from="1624584021297" duration="18846000" />
       <workItem from="1624698665362" duration="52678000" />
       <workItem from="1625046532699" duration="34253000" />
-      <workItem from="1625380733935" duration="40222000" />
+      <workItem from="1625380733935" duration="42944000" />
+      <workItem from="1626489469864" duration="178000" />
     </task>
     <task id="LOCAL-00001" summary="主页面的的侧边栏菜单">
       <created>1624606802220</created>
@@ -155,17 +156,5 @@
     <MESSAGE value="获取侧边栏菜单 axios请求拦截挂载token" />
     <MESSAGE value="编辑分类" />
     <option name="LAST_COMMIT_MESSAGE" value="编辑分类" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/dsmanagementsystem/src/components/goods/cates.vue</url>
-          <line>255</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
